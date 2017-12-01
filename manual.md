@@ -276,3 +276,98 @@ CFR API를 사용하려면 개발하려는 애플리케이션을 네이버 개�
 4. **등록하기** 버튼을 클릭하면 **내 애플리케이션** 메뉴로 이동하며 방금 등록한 앱의 정보가 화면에 표시된다. 이 페이지에서 **Client ID**와 **Client Secret** 정보를 확인할 수 있다.
 
 ***
+
+## CFR API 사용하기
+
+CFR API는 REST API이며, 얼굴 인식을 수행할 이미지 데이터를 HTTP 통신으로 음성 합성 서버에 전달한다. 음성 합성 서버가 제공하는 REST API의 URI는 다음과 같다.
+
+![CFR1](./img/CFR1.png)
+
+HTTP 요청으로 얼굴 인식을 요청할 때 **사전 준비사항**에서 발급받은 Client ID와 Client Secret 정보를 헤더에 포함시켜야 한다. 또한 요청을 multipart 형식으로 보내야 하며, 메시지의 이름은 image여야 한다. 다음은 유명인 얼굴 인식 API를 호출할 때 보내는 HTTP 요청 메시지의 예이다.
+
+![CFR2](./img/CFR2.png)
+
+위와 같은 HTTP 요청을 얼굴 인식 서버로 전달하면 얼굴 인식 서버는 JSON 형태의 분석 결과 데이터를 HTTP 응답 메시지로 반환합니다. 다음은 응답 예제이다.
+
+![CFR3](./img/CFR3.png)
+
+위와 같은 방식으로 얼굴 감지 API도 사용할 수 있다.
+
+***
+
+## 구현 예제
+    
+    import java.io.*;
+    import java.net.HttpURLConnection;
+    import java.net.URL;
+    import java.net.URLConnection;
+
+    public class APIExamFace {
+
+    public static void main(String[] args) {
+
+        StringBuffer reqStr = new StringBuffer();
+        String clientId = "YOUR_CLIENT_ID";//애플리케이션 클라이언트 아이디값";
+        String clientSecret = "YOUR_CLIENT_SECRET";//애플리케이션 클라이언트 시크릿값";
+
+        try {
+            String paramName = "image"; // 파라미터명은 image로 지정
+            String imgFile = "이미지 파일 경로 ";
+            File uploadFile = new File(imgFile);
+            String apiURL = "https://openapi.naver.com/v1/vision/celebrity"; // 유명인 얼굴 인식
+            //String apiURL = "https://openapi.naver.com/v1/vision/face"; // 얼굴 감지
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setUseCaches(false);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            // multipart request
+            String boundary = "---" + System.currentTimeMillis() + "---";
+            con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+            con.setRequestProperty("X-Naver-Client-Id", clientId);
+            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            OutputStream outputStream = con.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
+            String LINE_FEED = "\r\n";
+            // file 추가
+            String fileName = uploadFile.getName();
+            writer.append("--" + boundary).append(LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"" + paramName + "\"; filename=\"" + fileName + "\"").append(LINE_FEED);
+            writer.append("Content-Type: "  + URLConnection.guessContentTypeFromName(fileName)).append(LINE_FEED);
+            writer.append(LINE_FEED);
+            writer.flush();
+            FileInputStream inputStream = new FileInputStream(uploadFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.flush();
+            inputStream.close();
+            writer.append(LINE_FEED).flush();
+            writer.append("--" + boundary + "--").append(LINE_FEED);
+            writer.close();
+            BufferedReader br = null;
+            int responseCode = con.getResponseCode();
+            if(responseCode==200) { // 정상 호출
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } else {  // 에러 발생
+                System.out.println("error!!!!!!! responseCode= " + responseCode);
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            }
+            String inputLine;
+            if(br != null) {
+                StringBuffer response = new StringBuffer();
+                while ((inputLine = br.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                br.close();
+                System.out.println(response.toString());
+            } else {
+                System.out.println("error !!!");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    }
