@@ -253,6 +253,7 @@ Clova Speech Synthesis API는 음성으로 변환할 텍스트를 입력받은 �
     4. 등록 후 내 애플리케이션 메뉴로 이동 후 등록한 앱의 정보 확인.
         (Client ID, Client Secret)
    
+<<<<<<< HEAD
 ### CSS API 사용하기
 ---------------
 1.__음성 합성할 텍스트 데이터를 HTTP 통신으로 음성 합성 서버에 전달.__
