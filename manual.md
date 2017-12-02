@@ -253,3 +253,68 @@ Clova Speech Synthesis API는 음성으로 변환할 텍스트를 입력받은 �
     4. 등록 후 내 애플리케이션 메뉴로 이동 후 등록한 앱의 정보 확인.
         (Client ID, Client Secret)
    
+### CSS API 사용하기
+---------------
+1.__음성 합성할 텍스트 데이터를 HTTP 통신으로 음성 합성 서버에 전달.__
+<P>(음성 합성 서버가 제공하는 REST API URI는 다음과 같으며, POST 방식으로 연결.)</P>
+
+        <http://openapi.naver.com/v1/voice/tts.bin>
+
+2.__사전 준비사항에서 발급받은 client ID와 client Secret 정보를 헤더에 포함시킨다.__
+<p>다음과 같이 HTTP 요청 헤더를 구성할 수 있다.</p>
+
+   
+
+        [HTTP Request Header]
+        POST /v1/voice/tts.bin HTTP/1.1 
+        Host: openapi.naver.com
+        Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+        X-Naver-Client-Id: {Client ID}
+        X-Naver-Client-Secret: {Client Secret}
+
+
+3.__HTTP 요청 본문에는 음성 합성할 텍스트, 목소리 종류와 속도도 정의 할 수 있다.__
+<P>다음은  "만나서 반갑습니다."를 일반 속도의 여성 목소리로 합성한 예제이다.</P>
+
+        [HTTP Request Body]
+        speaker=mijin&speed=0&text=만나서 반갑습니다.
+<P>위와 같은 HTTP 요청을 음성 합성 서버로 전달하면 서버는 MP3 형식의 바이너리 데이터를 HTTP 응답 메시지로 반환해준다.</P>
+
+4.__전달받은 음성 데이터를 재생하여 스피커로 출력__
+<P>다음은 HTTP 응답 예제이다.</P>
+
+
+            [HTTP Response Header]
+            HTTP/1.1 200 OK
+            Server: nginx
+            Date: Wed, 28 Sep 2016 06:51:49 GMT
+            Content-Type: audio/mpeg;charset=utf-8
+            Content-Length: 19794
+            Connection: keep-alive
+            Keep-Alive: timeout=5
+            X-QUOTA: 10
+            [HTTP Response Body]
+            {MP3 형식의 바이너리 데이터}
+***
+CSS API 레퍼런스
+---
+### 기본 정보
+---
+__CSS API의 요청 URl 및 요청에 필요한 헤더 정보는 아래와 같다.__
+<table>
+    <tr align ="center"><td>__메서드__</td><td>__요청 URl__</td><td>__필요 헤더__</td></tr>
+    <tr align ="center"><td>POST</td><td>https://openapi.naver.com/v1/voice/tts.bin</td><td>1. X-Naver-Client-Id: 사전 준비사항에서 발급받은 Client ID
+    <p>2. X-Naver-Client-Secret: 사전 준비사항에서 발급 받은 Client Secret</p>
+</td></tr>
+</table>
+
+
+### 요청 파라미터
+---
+CSS API에 필요한 요청 헤더를 본문에 입력하여 본문에 아래와 같이 파라미터를 작성해야한다. __작성하지 않을 시에는 오류가 발생한다.__
+
+
+    [HTTP Request Body]
+    speaker={string}&speed={integer}&text={string}
+ 다음은 파라미터에 대한 간단한 설명이다.
+<P> ![Alt text](.\img\파라미터.png) </P>
