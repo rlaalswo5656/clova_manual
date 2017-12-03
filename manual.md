@@ -319,7 +319,109 @@ CSS API에 필요한 요청 헤더를 본문에 입력하여 본문에 아래와
     speaker={string}&speed={integer}&text={string}
  다음은 파라미터에 대한 간단한 설명이다.
 <P> ![Alt text](.\img\파라미터.png) </P>
-=======
+
+***
+구현 예제
+---
+구현 예제는 Java, php 이 두가지에 대해서만 보이겠다. 나머지 Node.js , Python, c# 같은 예제는 필요에 따라서 검색하여 참고바람. 다음은 네이버 음성합성 Open API에 대한 예제이다.
+
+## 1. Java
+
+~~~
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Date;
+
+public class APIExamTTS {
+
+    public static void main(String[] args) {
+        String clientId = "YOUR_CLIENT_ID";//애플리케이션 클라이언트 아이디값";
+        String clientSecret = "YOUR_CLIENT_SECRET";//애플리케이션 클라이언트 시크릿값";
+        try {
+            String text = URLEncoder.encode("만나서 반갑습니다.", "UTF-8"); // 13자
+            String apiURL = "https://openapi.naver.com/v1/voice/tts.bin";
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("X-Naver-Client-Id", clientId);
+            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            // post request
+            String postParams = "speaker=mijin&speed=0&text=" + text;
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(postParams);
+            wr.flush();
+            wr.close();
+            int responseCode = con.getResponseCode();
+            BufferedReader br;
+            if(responseCode==200) { // 정상 호출
+                InputStream is = con.getInputStream();
+                int read = 0;
+                byte[] bytes = new byte[1024];
+                // 랜덤한 이름으로 mp3 파일 생성
+                String tempname = Long.valueOf(new Date().getTime()).toString();
+                File f = new File(tempname + ".mp3");
+                f.createNewFile();
+                OutputStream outputStream = new FileOutputStream(f);
+                while ((read =is.read(bytes)) != -1) {
+                    outputStream.write(bytes, 0, read);
+                }
+                is.close();
+            } else {  // 에러 발생
+                br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+                while ((inputLine = br.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                br.close();
+                System.out.println(response.toString());
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+~~~
+
+## 2. PHP
+~~~
+<?php
+  $client_id = "YOUR_CLIENT_ID";
+  $client_secret = "YOUR_CLIENT_SECRET";
+  $encText = urlencode("반갑습니다.");
+  $postvars = "speaker=mijin&speed=0&text=".$encText;
+  $url = "https://openapi.naver.com/v1/voice/tts.bin";
+  $is_post = true;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_POST, $is_post);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch,CURLOPT_POSTFIELDS, $postvars);
+  $headers = array();
+  $headers[] = "X-Naver-Client-Id: ".$client_id;
+  $headers[] = "X-Naver-Client-Secret: ".$client_secret;
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  $response = curl_exec ($ch);
+  $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  echo "status_code:".$status_code."<br>";
+  curl_close ($ch);
+  if($status_code == 200) {
+    //echo $response;
+    $fp = fopen("tts.mp3", "w+");
+    fwrite($fp, $response);
+    fclose($fp);
+    echo "<a href='tts.mp3'>TTS재생</a>";
+  } else {
+    echo "Error 내용:".$response;
+  }
+?>
+~~~
+## 2. PHP
 
 ## CFR API란?
 
