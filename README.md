@@ -11,3 +11,9 @@ OSS 메뉴얼 작성 프로젝트
 
 ### 조원 구성
 ---
+<table>
+<tr> <td>직책</td> <td>이름</td> <td>학번</td> </tr>
+<tr> <td>조장</td> <td>김민재</td> <td>20134813</td> </tr>
+<tr> <td>조원</td> <td>정준영</td> <td>20134836</td> </tr>
+<tr> <td>조원</td> <td>서대원</td> <td>20134900</td> </tr>
+</table>
