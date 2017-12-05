@@ -318,7 +318,8 @@ CSS API에 필요한 요청 헤더를 본문에 입력하여 본문에 아래와
     [HTTP Request Body]
     speaker={string}&speed={integer}&text={string}
  다음은 파라미터에 대한 간단한 설명이다.
-<P> ![Alt text](.\img\파라미터.png) </P>
+ 
+ ![Alt text](.\img\파라미터.png) 
 
 ***
 구현 예제
@@ -429,6 +430,19 @@ text 필드에 음성 합성할 문장을 입력 시, 쉼표를 넣으면 결과
 <p>다음은 두 문장으로 구분되고, 첫 번째 문장의 수미표에서 한번 쉬다가 읽는 예제이다.</p>
 
     여자친구랑 싸우고, 여자친구는 울었다.\n나는 당황 했다.
+    
+***
+CSS API와 iphone siri 비교
+---
+다음은 clova app의 음성인식과 iphone siri의 음성인식 성능 비교에 대한 참고 영상이다.
+
+https://www.youtube.com/watch?v=ZC34buZAWTM
+
+영상을 보고 iphone siri와 clova app 음성인식의 비교가 쉬워진다. 간단히 말하자면,
+clova는 사용자의 질문에 마치 사람 대 사람이 대화를 하듯이 답을 내놓는 반면에,
+iphone siri는 딱딱한 어조로 대화를 한다는 느낌보다는 정해진 답을 주는 기계적인 느낌이 강하다.
+또한, clova는 네이버 지식인 데이터베이스를 연동하여 siri 보다 질의에 대해 더욱 상세하고 높은
+만족도를 주는 결과를 내놓고, 질문에 대한 모호성이 siri 보다는 clova가 적다고 생각된다.
 ## CFR API란?
 
 Clova Face Recognition API(CFR API)는 이미지 데이터를 입력받은 후 얼굴 인식 결과를 JSON 형태로 반환한다. CFR API는 이미지에 있는 얼굴을 인식하여 분석 정보를 제공하는 얼굴 감지 API와 닮은 연예인을 알려주는 유명인 얼굴 인식 API를 제공한다. CFR API는 HTTP 기반의 REST API이며, 사용자 인증(로그인)이 필요하지 않은 비로그인 Open API이다.
