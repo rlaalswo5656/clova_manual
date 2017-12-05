@@ -439,10 +439,14 @@ CSS API와 iphone siri 비교
 https://www.youtube.com/watch?v=ZC34buZAWTM
 
 영상을 보고 iphone siri와 clova app 음성인식의 비교가 쉬워진다. 간단히 말하자면,
-clova는 사용자의 질문에 마치 사람 대 사람이 대화를 하듯이 답을 내놓는 반면에,
-iphone siri는 딱딱한 어조로 대화를 한다는 느낌보다는 정해진 답을 주는 기계적인 느낌이 강하다.
+clova는 목소리도 더 부드러우며 사용자의 질문에 마치 사람 대 사람이 대화를 하는 어투로 답을 내놓는 반면에,
+iphone siri는 딱딱한 어조로 대화를 한다는 느낌과 정해진 답을 주는 기계적인 느낌이 강하다.
 또한, clova는 네이버 지식인 데이터베이스를 연동하여 siri 보다 질의에 대해 더욱 상세하고 높은
-만족도를 주는 결과를 내놓고, 질문에 대한 모호성이 siri 보다는 clova가 적다고 생각된다.
+만족도를 주는 결과를 내놓는다. 즉 지식정보검색에 특화되어있다. 그리고 질문에 대한 모호성이 siri 보다는 clova가 적다고 생각한다.
+
+***
+
+---
 ## CFR API란?
 
 Clova Face Recognition API(CFR API)는 이미지 데이터를 입력받은 후 얼굴 인식 결과를 JSON 형태로 반환한다. CFR API는 이미지에 있는 얼굴을 인식하여 분석 정보를 제공하는 얼굴 감지 API와 닮은 연예인을 알려주는 유명인 얼굴 인식 API를 제공한다. CFR API는 HTTP 기반의 REST API이며, 사용자 인증(로그인)이 필요하지 않은 비로그인 Open API이다.
