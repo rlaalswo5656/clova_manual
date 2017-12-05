@@ -7,7 +7,7 @@ OSS 메뉴얼 작성 프로젝트
 ---
 사용 메뉴얼 : https://github.com/rlaalswo5656/clova_manual/blob/master/manual.md
 
-웹사이트 : 
+웹사이트 : https://mom0210.000webhostapp.com/
 
 ### 조원 구성
 ---
