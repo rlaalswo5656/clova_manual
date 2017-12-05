@@ -554,7 +554,7 @@ HTTP 요청으로 얼굴 인식을 요청할 때 **사전 준비사항**에서 �
 * 유명인 얼굴 인식 API
 * 얼굴 감지 API
 
-# 유명인 얼굴 인식 API
+#유명인 얼굴 인식 API
 입력받은 이미지로부터 얼굴을 감지하고 감지한 얼굴이 어떤 유명인과 닮았는지 분석하여 그 결과를 반환하는 REST API이다. 이미지에서 다음과 같은 정보를 분석한다.
 
 * 감지된 얼굴의 수
@@ -562,6 +562,32 @@ HTTP 요청으로 얼굴 인식을 요청할 때 **사전 준비사항**에서 �
  * 닮은 유명인 이름
  * 해당 유명인을 닮은 정도
 
+
+# 기본 정보
+유명인 얼굴 인식 API의 요청 URI 및 요청에 필요한 헤더 정보는 다음과 같다.
+![CFR4](./img/CFR_basic_information.png)
+
+# 요청 파라미터
+Multipart 메시지에 이름이 *image*라는 메시지로 이미지의 바이너리 데이터를 전달해야 한다. **최대 2MB의 이미지 데이터를 지원**한다. 다음은 헤더를 포함한 HTTP 요청 예제이다.
+
+	<code>
+	[HTTP Request Header]
+	POST /v1/vision/celebrity HTTP/1.1
+	Host: openapi.naver.com
+	Content-Type: multipart/form-data; boundary={boundary-text}
+	X-Naver-Client-Id: {앱 등록 시 발급받은 Client ID}
+	X-Naver-Client-Secret: {앱 등록 시 발급 받은 Client Secret}
+	Content-Length: 96703
+	
+	--{boundary-text}
+	Content-Disposition: form-data; name="image"; filename="test.jpg"
+	Content-Type: image/jpeg
+	
+	{image binary data}
+	--{boundary-text}--
+
+
+	
 ***
 UX 고려사항
 ===
