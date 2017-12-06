@@ -652,10 +652,50 @@ Multipart 메시지에 이름이 *image*라는 메시지로 이미지의 바이�
  * 감지된 얼굴에서 분석된 감정
  * 감지된 얼굴의 방향
 
-# 오류 코드
+# 기본 정보
+얼굴 감지 API의 요청 URI 및 요청에 필요한 헤더 정보는 다음과 같습니다.
 
+|   메서드	|   요청 URI	|  필요 헤더 	|
+|---	|---	|---	|
+|   POST	|   https://openapi.naver.com/v1/vision/face	|  *X-Naver-Client-Id: 사전 준비사항에서 발급받은 Client ID
+|||*X-Naver-Client-Secret: 사전 준비사항에서 발급 받은 Client Secret|
+
+# 요청 파라미터 
+Multipart 메시지에 이름이 image라는 메시지로 이미지의 바이너리 데이터를 전달해야 합니다. 최대 2MB의 이미지 데이터를 지원합니다. 다음은 헤더를 포함한 HTTP 요청 예제입니다.
+
+	[HTTP Request Header]
+	POST /v1/vision/face HTTP/1.1
+	Host: openapi.naver.com
+	Content-Type: multipart/form-data; boundary={boundary-text}
+	X-Naver-Client-Id: {앱 등록 시 발급받은 Client ID}
+	X-Naver-Client-Secret: {앱 등록 시 발급 받은 Client Secret}
+	Content-Length: 96703
+
+	--{boundary-text}
+	Content-Disposition: form-data; name="image"; 			filename="test.jpg"
+	Content-Type: image/jpeg
+	
+	{image binary data}
+	--{boundary-text}--
+
+# 오류 코드
 CFR API가 발생시킬 수 있는 오류코드는 다음과 같다.
 
+| 오류 코드| 	HTTP 응답 코드| 	오류 메시지	| 설명|
+|---|---|---|---|
+| ER01	|400	|image parameter is needed.|	image 파라미터가 누락되었습니다.|
+|ER02	|400|	Failed to receive image content.|	이미지 데이터를 수신하는데 실패했습니다.|
+|ER03	|400|	Bad reqeust.	|잘못된 요청을 수신했습니다.|
+|ER04	|400	|Image size is too large.|	이미지의 크기가 2MB를 넘었습니다.|
+|ER11	|400	|Abnormal image format.|	인식할 수 없는 이미지 데이터가 입력되었습니다.|
+|ER12	|400|	Abnormal image width v.s height ratio.	|이미지의 너비가 높이의 4배 이상입니다.|
+|ER13|	400	|Image width is to small.|	이미지의 너비가 50 픽셀보다 작습니다.|
+|ER14|	400|	Image height is too small.	|이미지의 높이가 50 픽셀보다 작습니다.|
+|ER15|	400	|Failed to analyze image.|	분석할 수 없는 이미지가 입력되었습니다.|
+|ER21	|400|	Timeout error.|	서버에서 이미지 분석을 시간 내에 처리하지 못했습니다.|
+|ER22|	400	|Server is too busy.|	현재 이미지 분석 요청이 많아 처리할 수 없습니다.|
+|ER92|	500|	Failed to generate valid json string.	|서버에서 유효한 형식의 JSON 데이터를 결과로 생성하지 못했습니다.|
+|ER99	|500|	Internal server error.|	내부 서버 오류입니다. 포럼에 문의하시면 신속히 조치하겠습니다.|
 
 
 # Place object
