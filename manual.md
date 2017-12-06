@@ -660,6 +660,36 @@ Multipart 메시지에 이름이 *image*라는 메시지로 이미지의 바이�
 |   POST	|   https://openapi.naver.com/v1/vision/face	|  *X-Naver-Client-Id: 사전 준비사항에서 발급받은 Client ID
 |||*X-Naver-Client-Secret: 사전 준비사항에서 발급 받은 Client Secret|
 
+# 응답 
+
+얼굴 감지 API는 분석한 결과를 JSON 형식의 데이터로 반환합니다. JSON 응답의 각 필드에 대한 설명은 다음과 같습니다.
+
+|   필드 이름	|데이터 타입	|설명|
+|---	|---	|---	|
+|info	|object	|입력된 이미지 크기와 인식된 얼굴의 개수 정보를 가지는 객체|
+|info.size|	place object|	입력된 이미지의 크기 정보를 가지는 객체|
+|info.faceCount|	number	|감지된 얼굴의 수|
+|faces[]	|object array	|감지된 얼굴의 개별 분석 결과를 가지는 객체 배열|
+|faces[].roi	|place object|	감지된 특정 얼굴의 좌표 및 크기 정보를 가지는 객체|
+|faces[].landmark	|object	|감지된 얼굴의 눈, 코, 입의 위치를 가지는 객체|
+|faces[].landmark.leftEye|	place object|	왼쪽 눈의 위치|
+|faces[].landmark.rightEye|	place object	|오른쪽 눈의 위치|
+|faces[].landmark.nose|	place object|	코의 위치|
+|faces[].landmark.leftMouth|	place object|	왼쪽 입 꼬리의 위치|
+|faces[].landmark.rightMouth	|place object	|오른 쪽 입 꼬리의 위치|
+|faces[].gender|	object	|감지된 얼굴의 성별을 추정한 정보를 가지는 객체|
+|faces[].gender.value|	string	|인식된 성별. "male" 또는 "female" 값을 가집니다.|
+|faces[].gender.confidence|	number|	인식된 성별을 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.|
+|faces[].age|	object|	감지된 얼굴의 나이를 추정한 정보를 가지는 객체|
+|faces[].age.value	|string	|인식된 나이. "22~26"와 같이 나이의 범위가 표현된 문자열입니다.|
+|faces[].age.confidence|	number|	인식된 나이를 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.|
+|faces[].emotion	|object|	감지된 얼굴의 감정을 추천한 정보를 가지는 객체|
+|   faces[].emotion.value	|   string	|   인식된 감정. "smile"과 같이 얼굴의 표정이나 감정을 나타내는 문자열입니다. 다음과 같은 값을 가집니다. (angry,  disgust, fear, laugh, neutral, sad, surprise, smlie, talking)|
+| faces[].emotion.confidence  	|   number	|   인식된 감정을 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.	|
+|  faces[].pose 	|   object	|  감지된 얼굴이 어떤 포즈인지 추정한 정보를 가지는 객체 	|
+|   faces[].pose.value	|   string	|   인식된 얼굴의 포즈. "frontal_face"와 같이 얼굴의 방향을 나타내는 문자열입니다. 다음과 같은 값을 가집니다.(part_face, false_face, sunglasses, frontal_face, left_face, right_face, rotate_face)|
+|   faces[].pose.confidence	|   number	|   인식된 얼굴의 방향을 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.	|
+
 # 요청 파라미터 
 Multipart 메시지에 이름이 image라는 메시지로 이미지의 바이너리 데이터를 전달해야 합니다. 최대 2MB의 이미지 데이터를 지원합니다. 다음은 헤더를 포함한 HTTP 요청 예제입니다.
 
