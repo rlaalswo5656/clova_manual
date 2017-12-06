@@ -475,82 +475,6 @@ HTTP 요청으로 얼굴 인식을 요청할 때 **사전 준비사항**에서 �
 
 ***
 
-## 구현 예제
-    
-    import java.io.*;
-    import java.net.HttpURLConnection;
-    import java.net.URL;
-    import java.net.URLConnection;
-
-    public class APIExamFace {
-
-    public static void main(String[] args) {
-
-        StringBuffer reqStr = new StringBuffer();
-        String clientId = "YOUR_CLIENT_ID";//애플리케이션 클라이언트 아이디값";
-        String clientSecret = "YOUR_CLIENT_SECRET";//애플리케이션 클라이언트 시크릿값";
-
-        try {
-            String paramName = "image"; // 파라미터명은 image로 지정
-            String imgFile = "이미지 파일 경로 ";
-            File uploadFile = new File(imgFile);
-            String apiURL = "https://openapi.naver.com/v1/vision/celebrity"; // 유명인 얼굴 인식
-            //String apiURL = "https://openapi.naver.com/v1/vision/face"; // 얼굴 감지
-            URL url = new URL(apiURL);
-            HttpURLConnection con = (HttpURLConnection)url.openConnection();
-            con.setUseCaches(false);
-            con.setDoOutput(true);
-            con.setDoInput(true);
-            // multipart request
-            String boundary = "---" + System.currentTimeMillis() + "---";
-            con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            con.setRequestProperty("X-Naver-Client-Id", clientId);
-            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-            OutputStream outputStream = con.getOutputStream();
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
-            String LINE_FEED = "\r\n";
-            // file 추가
-            String fileName = uploadFile.getName();
-            writer.append("--" + boundary).append(LINE_FEED);
-            writer.append("Content-Disposition: form-data; name=\"" + paramName + "\"; filename=\"" + fileName + "\"").append(LINE_FEED);
-            writer.append("Content-Type: "  + URLConnection.guessContentTypeFromName(fileName)).append(LINE_FEED);
-            writer.append(LINE_FEED);
-            writer.flush();
-            FileInputStream inputStream = new FileInputStream(uploadFile);
-            byte[] buffer = new byte[4096];
-            int bytesRead = -1;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            outputStream.flush();
-            inputStream.close();
-            writer.append(LINE_FEED).flush();
-            writer.append("--" + boundary + "--").append(LINE_FEED);
-            writer.close();
-            BufferedReader br = null;
-            int responseCode = con.getResponseCode();
-            if(responseCode==200) { // 정상 호출
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            } else {  // 에러 발생
-                System.out.println("error!!!!!!! responseCode= " + responseCode);
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            }
-            String inputLine;
-            if(br != null) {
-                StringBuffer response = new StringBuffer();
-                while ((inputLine = br.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                br.close();
-                System.out.println(response.toString());
-            } else {
-                System.out.println("error !!!");
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-    }
 
 ##CFR API 레퍼런스
 
@@ -660,6 +584,24 @@ Multipart 메시지에 이름이 *image*라는 메시지로 이미지의 바이�
 |   POST	|   https://openapi.naver.com/v1/vision/face	|  *X-Naver-Client-Id: 사전 준비사항에서 발급받은 Client ID
 |||*X-Naver-Client-Secret: 사전 준비사항에서 발급 받은 Client Secret|
 
+# 요청 파라미터 
+Multipart 메시지에 이름이 image라는 메시지로 이미지의 바이너리 데이터를 전달해야 합니다. 최대 2MB의 이미지 데이터를 지원합니다. 다음은 헤더를 포함한 HTTP 요청 예제입니다.
+
+	[HTTP Request Header]
+	POST /v1/vision/face HTTP/1.1
+	Host: openapi.naver.com
+	Content-Type: multipart/form-data; boundary={boundary-text}
+	X-Naver-Client-Id: {앱 등록 시 발급받은 Client ID}
+	X-Naver-Client-Secret: {앱 등록 시 발급 받은 Client Secret}
+	Content-Length: 96703
+
+	--{boundary-text}
+	Content-Disposition: form-data; name="image"; 			filename="test.jpg"
+	Content-Type: image/jpeg
+	
+	{image binary data}
+	--{boundary-text}--
+
 # 응답 
 
 얼굴 감지 API는 분석한 결과를 JSON 형식의 데이터로 반환합니다. JSON 응답의 각 필드에 대한 설명은 다음과 같습니다.
@@ -690,23 +632,77 @@ Multipart 메시지에 이름이 *image*라는 메시지로 이미지의 바이�
 |   faces[].pose.value	|   string	|   인식된 얼굴의 포즈. "frontal_face"와 같이 얼굴의 방향을 나타내는 문자열입니다. 다음과 같은 값을 가집니다.(part_face, false_face, sunglasses, frontal_face, left_face, right_face, rotate_face)|
 |   faces[].pose.confidence	|   number	|   인식된 얼굴의 방향을 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.	|
 
-# 요청 파라미터 
-Multipart 메시지에 이름이 image라는 메시지로 이미지의 바이너리 데이터를 전달해야 합니다. 최대 2MB의 이미지 데이터를 지원합니다. 다음은 헤더를 포함한 HTTP 요청 예제입니다.
+다음은 얼굴 감지 API 요청에 대한 응답 예입니다.
 
-	[HTTP Request Header]
-	POST /v1/vision/face HTTP/1.1
-	Host: openapi.naver.com
-	Content-Type: multipart/form-data; boundary={boundary-text}
-	X-Naver-Client-Id: {앱 등록 시 발급받은 Client ID}
-	X-Naver-Client-Secret: {앱 등록 시 발급 받은 Client Secret}
-	Content-Length: 96703
-
-	--{boundary-text}
-	Content-Disposition: form-data; name="image"; 			filename="test.jpg"
-	Content-Type: image/jpeg
+	// 1개의 얼굴을 감지한 경우
+	{
+ 	"info": {
+ 	  "size": {
+ 	    "width": 900,
+ 	    "height": 1349
+ 	  },
+ 	  "faceCount": 1
+	 },
+	 "faces": [{
+	   "roi": {
+ 	    "x": 235,
+ 	    "y": 227,
+ 	    "width": 326,
+ 	    "height": 326
+ 	  },
+ 	  "landmark": {
+ 	    "leftEye": {
+  	     "x": 311,
+  	     "y": 289
+ 	    },
+ 	    "rightEye": {
+ 	      "x": 425,
+ 	      "y": 287
+    	 },
+  	   "nose": {
+  	     "x": 308,
+  	     "y": 346
+  	   },
+  	   "leftMouth": {
+  	     "x": 306,
+  	     "y": 425
+  	   },
+  	   "rightMouth": {
+  	     "x": 383,
+  	     "y": 429
+  	   }
+ 	  },
+ 	  "gender": {
+  	   "value": "male",
+  	   "confidence": 0.91465
+  	 },
+  	 "age": {
+  	   "value": "22~26",
+  	   "confidence": 0.742265
+  	 },
+  	 "emotion": {
+  	   "value": "smile",
+  	   "confidence": 0.460465
+  	 },
+  	 "pose": {
+  	   "value": "frontal_face",
+  	   "confidence": 0.937789
+ 	  }
+	 }]
+	}
 	
-	{image binary data}
-	--{boundary-text}--
+	// 감지한 얼굴이 없을 경우
+	{
+ 		"info": {
+ 			"size": {
+ 				"width": 700,
+ 				"height": 800
+ 			},
+ 			"faceCount": 0
+ 		},
+ 		"faces": []
+	 }
+
 
 # 오류 코드
 CFR API가 발생시킬 수 있는 오류코드는 다음과 같다.
@@ -737,6 +733,83 @@ CFR API는 HTTP 응답의 JSON 데이터에 감지한 얼굴 및 얼굴의 부�
 | height  | number  | 입력된 이미지, 인식된 얼굴의 높이 정보(px)  | 선택  |
 |  x | number  | 인식된 얼굴 및 얼굴 부위의 위치 정보를 나타내기 위한 x 좌표(px). 기준점은 이미지의 좌상단 모서리  | 선택  |
 |  y |  number | 인식된 얼굴 및 얼굴 부위의 위치 정보를 나타내기 위한 y 좌표(px). 기준점은 이미지의 좌상단 모서리  | 선택  |
+
+## 구현 예제
+    
+    import java.io.*;
+    import java.net.HttpURLConnection;
+    import java.net.URL;
+    import java.net.URLConnection;
+
+    public class APIExamFace {
+
+    public static void main(String[] args) {
+
+        StringBuffer reqStr = new StringBuffer();
+        String clientId = "YOUR_CLIENT_ID";//애플리케이션 클라이언트 아이디값";
+        String clientSecret = "YOUR_CLIENT_SECRET";//애플리케이션 클라이언트 시크릿값";
+
+        try {
+            String paramName = "image"; // 파라미터명은 image로 지정
+            String imgFile = "이미지 파일 경로 ";
+            File uploadFile = new File(imgFile);
+            String apiURL = "https://openapi.naver.com/v1/vision/celebrity"; // 유명인 얼굴 인식
+            //String apiURL = "https://openapi.naver.com/v1/vision/face"; // 얼굴 감지
+            URL url = new URL(apiURL);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setUseCaches(false);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            // multipart request
+            String boundary = "---" + System.currentTimeMillis() + "---";
+            con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+            con.setRequestProperty("X-Naver-Client-Id", clientId);
+            con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+            OutputStream outputStream = con.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
+            String LINE_FEED = "\r\n";
+            // file 추가
+            String fileName = uploadFile.getName();
+            writer.append("--" + boundary).append(LINE_FEED);
+            writer.append("Content-Disposition: form-data; name=\"" + paramName + "\"; filename=\"" + fileName + "\"").append(LINE_FEED);
+            writer.append("Content-Type: "  + URLConnection.guessContentTypeFromName(fileName)).append(LINE_FEED);
+            writer.append(LINE_FEED);
+            writer.flush();
+            FileInputStream inputStream = new FileInputStream(uploadFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.flush();
+            inputStream.close();
+            writer.append(LINE_FEED).flush();
+            writer.append("--" + boundary + "--").append(LINE_FEED);
+            writer.close();
+            BufferedReader br = null;
+            int responseCode = con.getResponseCode();
+            if(responseCode==200) { // 정상 호출
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            } else {  // 에러 발생
+                System.out.println("error!!!!!!! responseCode= " + responseCode);
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            }
+            String inputLine;
+            if(br != null) {
+                StringBuffer response = new StringBuffer();
+                while ((inputLine = br.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                br.close();
+                System.out.println(response.toString());
+            } else {
+                System.out.println("error !!!");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    }
 
 ***
 UX 고려사항
