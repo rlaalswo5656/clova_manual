@@ -12,7 +12,6 @@ CLOVA 메뉴얼
 2. CSR
 3. CSS
 4. CFR
-5. UX 고려사항
 ******************
 CLOVA 란?
 ==================
@@ -22,11 +21,11 @@ CLOVA 란?
 CSR
 ==================
 
-CSR API란?
+### CSR API란?
 ------------------
 CSR은 Clova Speech Recognition의 약자로써 음성 입력을 스트리밍 형태로 입력받은 후 음성 인식한 결과를 텍스트로 반환한다. CSR API는 사용자 음성 입력을 전달 받기 위해 자체 개발한 스트리밍 프로토콜을 사용중이다 따라서, HTTP기반의 REST API형태가 아니라 Android SDK형태로 CSR API를 제공하고 있다.
 
-사전 준비사항
+### 사전 준비사항
 ------------------
 CSR API를 사용하려면 개발하려는 애플리케이션을 네이버 개발자 센터에 등록해야 한다. 이때, 사용할 API에 대한 권한을 설정해야하며 ,API 사용 시 필요한 인증 정보를 획득해야 합니다. 애플리케이션 등록을 참고하여 다음과 같이 필요한 사항을 미리 준비해야한다.
 
@@ -35,7 +34,7 @@ CSR API를 사용하려면 개발하려는 애플리케이션을 네이버 개�
     3. 비로그인 오픈 API 서비스 환경에 개발하는 앱 정보를 입력합니다.
     4. 등록하기 버튼을 클릭합니다.
     
-API 사용하기
+### API 사용하기
 ------------------
 1. 다음 구문을 app/build.gradle 파일에 추가한다.
 ![Alt text](./img/1.png)
@@ -49,9 +48,8 @@ API 사용하기
 3. (선택) proguard-rules.pro 파일에 다음을 추가합니다. 아래 코드는 앱을 보다 가볍고 안전하게 만들어줍니다.
 ![Alt text](./img/3.png)
 
-구현 예제
+### 구현 예제
 -------------------
-<code>
    
     public class MainActivity extends Activity {
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -236,10 +234,21 @@ API 사용하기
         }
     }
 
-</code>
+### CSR 참고사항
+---
+일반적으로 사용자는 음성 인식 버튼을 누르자마자 발화를 시작하려고 할 것입니다. 하지만 음성 인식을 시작하는 recognize() 메서드를 호출하면 음성 인식을 위한 메모리 할당, 마이크 자원 할당, 음성 인식 서버 접속 및 인증 등의 준비 과정을 수행해야 하기 때문에 사용자의 발화 일부가 누락될 수 있습니다. 따라서, 앱은 모든 준비가 완료된 후 사용자에게 발화해도 좋다는 정보를 전달해야 합니다. 이 방법은 다음과 같이 처리할 수 있습니다.
+    * 모든 준비가 완료되면 onReady callback 메서드가 호출됩니다.
+    * onReady callback 메서드가 호출되기 전까지 "준비 중입니다."와 같은 메시지를 표시하거나 준비 중임을 나타내는 UI 표시를 해야 합니다.
+    * onReady callback 메서드가 호출되면 "이야기해주세요."와 같은 메시지를 표시하거나 사용 가능함을 나타내는 UI를 표시해야 합니다.
+    
+### CSR API에 대한 제안
+---
+CSR API는 사용자의 음성입력을 텍스트로 바꿔주는 API이다. 하지만 아직 안드로이드나 iOS 환경에서만 사용할 수 있다. 스마트폰이 많이 보급되고 있지만 아직 컴퓨터를 통한 브라우저 접속 역시 활발하기 때문에 웹 환경에서도 CSR API를 사용할 수 있도록 지원해주면 활용가능성이 더욱 무궁무진해 질 것이라 생각한다.
+
+
 ***
 CSS
----
+===
 
 ### CSS API란?
 ------------------
@@ -297,7 +306,7 @@ Clova Speech Synthesis API는 음성으로 변환할 텍스트를 입력받은 �
             [HTTP Response Body]
             {MP3 형식의 바이너리 데이터}
 ***
-CSS API 레퍼런스
+## CSS API 레퍼런스
 ---
 ### 기본 정보
 ---
@@ -320,9 +329,8 @@ CSS API에 필요한 요청 헤더를 본문에 입력하여 본문에 아래와
 다음은 파라미터에 대한 간단한 설명이다.
 
 ![Alt text](./img/para.png) 
-
 ***
-구현 예제
+### 구현 예제
 ---
 구현 예제는 Java, php 이 두가지에 대해서만 보이겠다. 나머지 Node.js , Python, c# 같은 예제는 필요에 따라서 검색하여 참고바람. 다음은 네이버 음성합성 Open API에 대한 예제이다.
 
@@ -424,15 +432,15 @@ public class APIExamTTS {
 ~~~
 
 ***
-참고 사항
+### CSS 참고 사항
 ---
 text 필드에 음성 합성할 문장을 입력 시, 쉼표를 넣으면 결과에서 해당 부분을 잠시 쉬었다가 말하게 되며, 마침표와 개행 문자를 연속 입력(.\n)하면 구분된 문장으로 합성 결과를 보내준다. 
 <p>다음은 두 문장으로 구분되고, 첫 번째 문장의 수미표에서 한번 쉬다가 읽는 예제이다.</p>
 
     여자친구랑 싸우고, 여자친구는 울었다.\n나는 당황 했다.
-    
+
 ***
-CSS API와 iphone siri 비교
+### CSS API와 iphone siri 비교
 ---
 다음은 clova app의 음성인식과 iphone siri의 음성인식 성능 비교에 대한 참고 영상이다.
 
@@ -445,26 +453,29 @@ iphone siri는 딱딱한 어조로 대화를 한다는 느낌과 정해진 답�
 만족도를 주는 결과를 내놓는다. 즉 지식정보검색에 특화되어있다. 그리고 질문에 대한 모호성이 siri 보다는 clova가 적다고 생각한다.
 
 ***
-제안
+### CSS API에 대한 제안
 ---
 clova는 네이버 지식인 데이터베이스를 인공지능에 맞춰 연동한 형태로 지식정보검색에 특화되어있어 지식 정보 활용도가 높고, 빅스비, siri 등과 같은
 것들과 비교해보면 card view로 직관적인 인터페이스를 제공하며, 여러 억양의 목소리 톤과 억양을 선택할 수 있다. 또한 위의 비교 영상에서 보면 음성 인식에 대한 인식률이 높은 것을 볼 수 있다. 그리고 가장 중요한 것은 사람과 대화하는 듯한 느낌이 매우 강하다. 또한 네이버 지식인 데이터베이스를 연동해서 국내 환경에 강한 것을 알 수가있다. 
 
 하지만 siri 같은 경우는 "누구누구에게 전화해줘", "누구누구에게 문자보내줘"라고 말하면 바로 통화 및 문자를 보내지만 clova 같은 경우는 통화 및 문자전송 직전의 버튼이 뜨면서 사용자가 결정 할 수 있는 결정권을 주는데 결국 음성인식을 하는 것은 우리가 이와 같은 상황을 피하기 위함이라고 생각하기 때문에 clova가 바로 통화를 걸어주거나 버튼이 아닌 음성으로 "누구누구와 통화를 하시겠습니까?","누구누구에게 문자 전송를 하시겠습니까?" 와 같은 대화식으로 기능을 개선하면 좋을 것 같다고 생각한다. 
 ***
-## CFR API란?
+
+CFR
+===
+
+### CFR API란?
 ---
 Clova Face Recognition API(CFR API)는 이미지 데이터를 입력받은 후 얼굴 인식 결과를 JSON 형태로 반환한다. CFR API는 이미지에 있는 얼굴을 인식하여 분석 정보를 제공하는 얼굴 감지 API와 닮은 연예인을 알려주는 유명인 얼굴 인식 API를 제공한다. CFR API는 HTTP 기반의 REST API이며, 사용자 인증(로그인)이 필요하지 않은 비로그인 Open API이다.
 
 ***
-## 사전 준비사항
-
+### 사전 준비사항
+---
 CFR API를 사용하려면 개발하려는 애플리케이션을 네이버 개발자 센터에 등록해야 한다. 이때, 사용할 API에 대한 권한을 설정해야 하며, API 사용 시 필요한 정보를 획득해야 한다. 애플리케이션 등록을 참고하여 다음과 같이 필요한 사항을 미리 준비한다.
 
+
+### 애플리케이션 등록(API 이용신청)
 ---
-
-## 애플리케이션 등록(API 이용신청)
-
 애플리케이션의 기본 정보를 등록하면, 좌측 내 어플리케이션 메뉴의 서브 메뉴의 등록한 애플리케이션 이름으로 서브 메뉴가 만들어진다.
 
 ![CFR_App](./img/CFR_Register_App.png)
@@ -477,8 +488,8 @@ CFR API를 사용하려면 개발하려는 애플리케이션을 네이버 개�
 
 ***
 
-## CFR API 사용하기
-
+### CFR API 사용하기
+---
 CFR API는 REST API이며, 얼굴 인식을 수행할 이미지 데이터를 HTTP 통신으로 음성 합성 서버에 전달한다. 음성 합성 서버가 제공하는 REST API의 URI는 다음과 같으며 POST 방식으로 연결을 시도해야 한다.
 
 ![CFR1](./img/CFR1.png)
@@ -495,7 +506,188 @@ HTTP 요청으로 얼굴 인식을 요청할 때 **사전 준비사항**에서 �
 
 ***
 
-## 구현 예제
+
+## CFR API 레퍼런스
+---
+* 유명인 얼굴 인식 API
+* 얼굴 감지 API
+
+### 얼굴 감지 API 
+---
+입력받은 이미지로부터 얼굴을 감지하고 입력된 이미지에서 얼마나 많은 얼굴이 감지되었고 각 얼굴이 어디에 어떤 크기로 위치하며 어떤 모습을 하고 있는지 반환하는 REST API입니다. 이미지에서 다음과 같은 정보를 분석합니다.
+
+* 감지된 얼굴의 수
+* 감지된 각 얼굴을 분석한 정보
+* 감지된 각 얼굴의 좌표 및 크기
+* 감지된 각 얼굴의 눈, 코, 입의 좌표
+* 감지된 얼굴의 추정 성별 및 추정치
+* 감지된 얼굴의 추정 나이 및 추정치
+* 감지된 얼굴에서 분석된 감정
+* 감지된 얼굴의 방향
+
+### 기본 정보
+---
+얼굴 감지 API의 요청 URI 및 요청에 필요한 헤더 정보는 다음과 같습니다.
+
+|   메서드	|   요청 URI	|  필요 헤더 	|
+|---	|---	|---	|
+|   POST	|   https://openapi.naver.com/v1/vision/face	|  *X-Naver-Client-Id: 사전 준비사항에서 발급받은 Client ID
+|||*X-Naver-Client-Secret: 사전 준비사항에서 발급 받은 Client Secret|
+
+### 요청 파라미터
+---
+Multipart 메시지에 이름이 image라는 메시지로 이미지의 바이너리 데이터를 전달해야 합니다. 최대 2MB의 이미지 데이터를 지원합니다. 다음은 헤더를 포함한 HTTP 요청 예제입니다.
+
+	[HTTP Request Header]
+	POST /v1/vision/face HTTP/1.1
+	Host: openapi.naver.com
+	Content-Type: multipart/form-data; boundary={boundary-text}
+	X-Naver-Client-Id: {앱 등록 시 발급받은 Client ID}
+	X-Naver-Client-Secret: {앱 등록 시 발급 받은 Client Secret}
+	Content-Length: 96703
+
+	--{boundary-text}
+	Content-Disposition: form-data; name="image"; 			filename="test.jpg"
+	Content-Type: image/jpeg
+	
+	{image binary data}
+	--{boundary-text}--
+
+### 응답 
+---
+얼굴 감지 API는 분석한 결과를 JSON 형식의 데이터로 반환합니다. JSON 응답의 각 필드에 대한 설명은 다음과 같습니다.
+
+|   필드 이름	|데이터 타입	|설명|
+|---	|---	|---	|
+|info	|object	|입력된 이미지 크기와 인식된 얼굴의 개수 정보를 가지는 객체|
+|info.size|	place object|	입력된 이미지의 크기 정보를 가지는 객체|
+|info.faceCount|	number	|감지된 얼굴의 수|
+|faces[]	|object array	|감지된 얼굴의 개별 분석 결과를 가지는 객체 배열|
+|faces[].roi	|place object|	감지된 특정 얼굴의 좌표 및 크기 정보를 가지는 객체|
+|faces[].landmark	|object	|감지된 얼굴의 눈, 코, 입의 위치를 가지는 객체|
+|faces[].landmark.leftEye|	place object|	왼쪽 눈의 위치|
+|faces[].landmark.rightEye|	place object	|오른쪽 눈의 위치|
+|faces[].landmark.nose|	place object|	코의 위치|
+|faces[].landmark.leftMouth|	place object|	왼쪽 입 꼬리의 위치|
+|faces[].landmark.rightMouth	|place object	|오른 쪽 입 꼬리의 위치|
+|faces[].gender|	object	|감지된 얼굴의 성별을 추정한 정보를 가지는 객체|
+|faces[].gender.value|	string	|인식된 성별. "male" 또는 "female" 값을 가집니다.|
+|faces[].gender.confidence|	number|	인식된 성별을 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.|
+|faces[].age|	object|	감지된 얼굴의 나이를 추정한 정보를 가지는 객체|
+|faces[].age.value	|string	|인식된 나이. "22~26"와 같이 나이의 범위가 표현된 문자열입니다.|
+|faces[].age.confidence|	number|	인식된 나이를 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.|
+|faces[].emotion	|object|	감지된 얼굴의 감정을 추천한 정보를 가지는 객체|
+|   faces[].emotion.value	|   string	|   인식된 감정. "smile"과 같이 얼굴의 표정이나 감정을 나타내는 문자열입니다. 다음과 같은 값을 가집니다. (angry,  disgust, fear, laugh, neutral, sad, surprise, smlie, talking)|
+| faces[].emotion.confidence  	|   number	|   인식된 감정을 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.	|
+|  faces[].pose 	|   object	|  감지된 얼굴이 어떤 포즈인지 추정한 정보를 가지는 객체 	|
+|   faces[].pose.value	|   string	|   인식된 얼굴의 포즈. "frontal_face"와 같이 얼굴의 방향을 나타내는 문자열입니다. 다음과 같은 값을 가집니다.(part_face, false_face, sunglasses, frontal_face, left_face, right_face, rotate_face)|
+|   faces[].pose.confidence	|   number	|   인식된 얼굴의 방향을 확신하는 정도. 0에서 1사이의 실수로 표현됩니다. 1에 가까울수록 높은 확신을 나타냅니다.	|
+
+다음은 얼굴 감지 API 요청에 대한 응답 예입니다.
+
+	// 1개의 얼굴을 감지한 경우
+	{
+ 	"info": {
+ 	  "size": {
+ 	    "width": 900,
+ 	    "height": 1349
+ 	  },
+ 	  "faceCount": 1
+	 },
+	 "faces": [{
+	   "roi": {
+ 	    "x": 235,
+ 	    "y": 227,
+ 	    "width": 326,
+ 	    "height": 326
+ 	  },
+ 	  "landmark": {
+ 	    "leftEye": {
+  	     "x": 311,
+  	     "y": 289
+ 	    },
+ 	    "rightEye": {
+ 	      "x": 425,
+ 	      "y": 287
+    	 },
+  	   "nose": {
+  	     "x": 308,
+  	     "y": 346
+  	   },
+  	   "leftMouth": {
+  	     "x": 306,
+  	     "y": 425
+  	   },
+  	   "rightMouth": {
+  	     "x": 383,
+  	     "y": 429
+  	   }
+ 	  },
+ 	  "gender": {
+  	   "value": "male",
+  	   "confidence": 0.91465
+  	 },
+  	 "age": {
+  	   "value": "22~26",
+  	   "confidence": 0.742265
+  	 },
+  	 "emotion": {
+  	   "value": "smile",
+  	   "confidence": 0.460465
+  	 },
+  	 "pose": {
+  	   "value": "frontal_face",
+  	   "confidence": 0.937789
+ 	  }
+	 }]
+	}
+	
+	// 감지한 얼굴이 없을 경우
+	{
+ 		"info": {
+ 			"size": {
+ 				"width": 700,
+ 				"height": 800
+ 			},
+ 			"faceCount": 0
+ 		},
+ 		"faces": []
+	 }
+
+### 오류 코드
+---
+CFR API가 발생시킬 수 있는 오류코드는 다음과 같다.
+
+| 오류 코드| 	HTTP 응답 코드| 	오류 메시지	| 설명|
+|---|---|---|---|
+| ER01	|400	|image parameter is needed.|	image 파라미터가 누락되었습니다.|
+|ER02	|400|	Failed to receive image content.|	이미지 데이터를 수신하는데 실패했습니다.|
+|ER03	|400|	Bad reqeust.	|잘못된 요청을 수신했습니다.|
+|ER04	|400	|Image size is too large.|	이미지의 크기가 2MB를 넘었습니다.|
+|ER11	|400	|Abnormal image format.|	인식할 수 없는 이미지 데이터가 입력되었습니다.|
+|ER12	|400|	Abnormal image width v.s height ratio.	|이미지의 너비가 높이의 4배 이상입니다.|
+|ER13|	400	|Image width is to small.|	이미지의 너비가 50 픽셀보다 작습니다.|
+|ER14|	400|	Image height is too small.	|이미지의 높이가 50 픽셀보다 작습니다.|
+|ER15|	400	|Failed to analyze image.|	분석할 수 없는 이미지가 입력되었습니다.|
+|ER21	|400|	Timeout error.|	서버에서 이미지 분석을 시간 내에 처리하지 못했습니다.|
+|ER22|	400	|Server is too busy.|	현재 이미지 분석 요청이 많아 처리할 수 없습니다.|
+|ER92|	500|	Failed to generate valid json string.	|서버에서 유효한 형식의 JSON 데이터를 결과로 생성하지 못했습니다.|
+|ER99	|500|	Internal server error.|	내부 서버 오류입니다. 포럼에 문의하시면 신속히 조치하겠습니다.|
+
+
+### Place object
+---
+CFR API는 HTTP 응답의 JSON 데이터에 감지한 얼굴 및 얼굴의 부위를 표시하기 위해 다음과 같이 place 객체를 공유하여 사용합니다. 각 필드는 선택적이며, 크기 정보를 나타낼 때와 위치 정보를 나타낼 때 선택적으로 사용할 수 있다.
+
+| 필드 이름  | 데이터 타입  |  설명 | 필수 여부  |
+|---|---|---|---|
+| width  | number  |  입력된 이미지, 인식된 얼굴의 너비 정보(px) | 선택  |
+| height  | number  | 입력된 이미지, 인식된 얼굴의 높이 정보(px)  | 선택  |
+|  x | number  | 인식된 얼굴 및 얼굴 부위의 위치 정보를 나타내기 위한 x 좌표(px). 기준점은 이미지의 좌상단 모서리  | 선택  |
+|  y |  number | 인식된 얼굴 및 얼굴 부위의 위치 정보를 나타내기 위한 y 좌표(px). 기준점은 이미지의 좌상단 모서리  | 선택  |
+
+### 구현 예제
+---
     
     import java.io.*;
     import java.net.HttpURLConnection;
@@ -572,122 +764,6 @@ HTTP 요청으로 얼굴 인식을 요청할 때 **사전 준비사항**에서 �
     }
     }
 
-## CFR API 레퍼런스
-
-* 유명인 얼굴 인식 API
-* 얼굴 감지 API
-
-#유명인 얼굴 인식 API
-입력받은 이미지로부터 얼굴을 감지하고 감지한 얼굴이 어떤 유명인과 닮았는지 분석하여 그 결과를 반환하는 REST API이다. 이미지에서 다음과 같은 정보를 분석한다.
-
-* 감지된 얼굴의 수
-* 감지된 각 얼굴을 분석한 정보
- * 닮은 유명인 이름
- * 해당 유명인을 닮은 정도
-
-
-# 기본 정보
-유명인 얼굴 인식 API의 요청 URI 및 요청에 필요한 헤더 정보는 다음과 같다.
-![CFR4](./img/CFR_basic_information.png)
-
-# 요청 파라미터
-Multipart 메시지에 이름이 *image*라는 메시지로 이미지의 바이너리 데이터를 전달해야 한다. **최대 2MB의 이미지 데이터를 지원**한다. 다음은 헤더를 포함한 HTTP 요청 예제이다.
-
-	<code>
-	[HTTP Request Header]
-	POST /v1/vision/celebrity HTTP/1.1
-	Host: openapi.naver.com
-	Content-Type: multipart/form-data; boundary={boundary-text}
-	X-Naver-Client-Id: {앱 등록 시 발급받은 Client ID}
-	X-Naver-Client-Secret: {앱 등록 시 발급 받은 Client Secret}
-	Content-Length: 96703
-	
-	--{boundary-text}
-	Content-Disposition: form-data; name="image"; filename="test.jpg"
-	Content-Type: image/jpeg
-	
-	{image binary data}
-	--{boundary-text}--
-
-# 응답
-얼굴 감지 API는 분석한 결과를 JSON 형식의 데이터로 반환합니다. JSON 응답의 각 필드에 대한 설명은 다음과 같다.
-
-다음은 얼굴 감지 API 요청에 대한 응답의 예이다.
-
-	// 1개의 얼굴을 감지한 경우
-	{
- 	"info": {
- 	  "size": {
- 	    "width": 900,
- 	    "height": 1349
-	   },
-	   "faceCount": 1
-	 },
- 	"faces": [{
- 	  "roi": {
- 	    "x": 235,
- 	    "y": 227,
-	     "width": 326,
-	     "height": 326
- 	  },
- 	  "landmark": {
- 	    "leftEye": {
- 	      "x": 311,
- 	      "y": 289
- 	    },
- 	    "rightEye": {
- 	      "x": 425,
- 	      "y": 287
- 	    },
- 	    "nose": {
-  	     "x": 308,
-  	     "y": 346
-   	  },
-  	   "leftMouth": {
-  	     "x": 306,
- 	      "y": 425
- 	    },
- 	    "rightMouth": {
- 	      "x": 383,
- 	      "y": 429
- 	    }
- 	  },
- 	  "gender": {
- 	    "value": "male",
- 	    "confidence": 0.91465
- 	  },
- 	  "age": {
- 	    "value": "22~26",
- 	    "confidence": 0.742265
- 	  },
- 	  "emotion": {
- 	    "value": "smile",
- 	    "confidence": 0.460465
- 	  },
-	   "pose": {
-	     "value": "frontal_face",
-	     "confidence": 0.937789
-  	 }
- 	}]
-	}
-	
-	// 감지한 얼굴이 없을 경우
-	{
- 		"info": {
- 			"size": {
- 				"width": 700,
- 				"height": 800
- 			},
- 			"faceCount": 0
- 		},
- 		"faces": []
- 	}
-
-
-***
-UX 고려사항
-===
-일반적으로 사용자는 음성 인식 버튼을 누르자마자 발화를 시작하려고 할 것입니다. 하지만 음성 인식을 시작하는 recognize() 메서드를 호출하면 음성 인식을 위한 메모리 할당, 마이크 자원 할당, 음성 인식 서버 접속 및 인증 등의 준비 과정을 수행해야 하기 때문에 사용자의 발화 일부가 누락될 수 있습니다. 따라서, 앱은 모든 준비가 완료된 후 사용자에게 발화해도 좋다는 정보를 전달해야 합니다. 이 방법은 다음과 같이 처리할 수 있습니다.
-    * 모든 준비가 완료되면 onReady callback 메서드가 호출됩니다.
-    * onReady callback 메서드가 호출되기 전까지 "준비 중입니다."와 같은 메시지를 표시하거나 준비 중임을 나타내는 UI 표시를 해야 합니다.
-    * onReady callback 메서드가 호출되면 "이야기해주세요."와 같은 메시지를 표시하거나 사용 가능함을 나타내는 UI를 표시해야 합니다.
+### CFR API에 대한 제안
+---
+CFR 즉, 클로바 얼굴 인식 기술은 얼굴과 관련된 다양한 정보를 제공한다. 이미지 속의 얼굴과 가장 닮은 유명인을 찾고 해당 유명인을 닮은 정도를 측정할 수 있다. 얼굴을 분석한 정보는 얼굴과 눈, 코, 입의 좌표와 크기로 이를 분석하여 성별과 나이 추정, 인물의 감정상태와 얼굴의 방향을 알 수 있다. 하지만 이미지 속의 얼굴은 같은 사람이라도 여러 요인에 의하여 다르게 보이기도 하는데 주변의 조명에 따른 얼굴 밝기의 변화로 이미지 속 얼굴에 다양한 왜곡을 일으킬 수 있다. 따라서 조명의 영향을 줄이기 위해 이미지 속 얼굴 인식 전에 영상처리 기법을 이용하여 조명의 영향을 제거한 뒤 이미지 속 얼굴을 분석하면 보다 정확한 측정이 가능하지 않을까 생각한다.
