@@ -237,9 +237,9 @@ API 사용하기
     }
 
 </code>
-******************
+***
 CSS
-==================
+---
 
 ### CSS API란?
 ------------------
@@ -303,7 +303,7 @@ CSS API 레퍼런스
 ---
 __CSS API의 요청 URl 및 요청에 필요한 헤더 정보는 아래와 같다.__
 <table>
-    <tr align ="center"><td>__메서드__</td><td>__요청 URl__</td><td>__필요 헤더__</td></tr>
+    <tr align ="center"><td>메서드</td><td>요청 URl</td><td>필요 헤더</td></tr>
     <tr align ="center"><td>POST</td><td>https://openapi.naver.com/v1/voice/tts.bin</td><td>1. X-Naver-Client-Id: 사전 준비사항에서 발급받은 Client ID
     <p>2. X-Naver-Client-Secret: 사전 준비사항에서 발급 받은 Client Secret</p>
 </td></tr>
@@ -317,9 +317,9 @@ CSS API에 필요한 요청 헤더를 본문에 입력하여 본문에 아래와
 
     [HTTP Request Body]
     speaker={string}&speed={integer}&text={string}
- 다음은 파라미터에 대한 간단한 설명이다.
- 
- ![Alt text](.\img\파라미터.png) 
+다음은 파라미터에 대한 간단한 설명이다.
+
+![Alt text](./img/para.png) 
 
 ***
 구현 예제
