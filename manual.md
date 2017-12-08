@@ -36,20 +36,20 @@ CSR API를 사용하려면 개발하려는 애플리케이션을 네이버 개�
     
 ### API 사용하기
 ------------------
-1. 다음 구문을 app/build.gradle 파일에 추가한다.
-~~~
+1. <p>다음 구문을 app/build.gradle 파일에 추가한다.</p>
+    ~~~
         repositories {
             jcenter()
         }
         dependencies {
             compile 'com.naver.speech.clientapi:naverspeech-sdk-android:1.1.1'
             }
-~~~
-2. 다음과 같이 Android Manifest파일을 설정한다.
+    ~~~
+2. <p>다음과 같이 Android Manifest파일을 설정한다.</p>
 <pre>
     * 패키지 이름 : manifest 요소의 package 속성 값이 사전 준비사항에서 등록한 안드로이드 앱 패키지 이름과 같아야 합니다.
     * 권한 설정 : 사용자의 음성 입력을 마이크를 통해 녹음해야 하고 녹음된 데이터를 서버로 전송해야 합니다. 따라서, android.permission.INTERNET와 android.permission.RECORD_AUDIO에 대한 권한이 반드시 필요합니다.
-~~~
+    ~~~
     <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.naver.naverspeech.client"
         android:versionCode="1" android:versionName="1.0" >
@@ -57,17 +57,17 @@ CSR API를 사용하려면 개발하려는 애플리케이션을 네이버 개�
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-~~~
-3. (선택) proguard-rules.pro 파일에 다음을 추가합니다. 아래 코드는 앱을 보다 가볍고 안전하게 만들어줍니다.
-~~~
+    ~~~
+3. <p>(선택) proguard-rules.pro 파일에 다음을 추가합니다. 아래 코드는 앱을 보다 가볍고 안전하게 만들어줍니다.</p>
+    ~~~
     -keep class com.naver.speech.clientapi.SpeechRecognizer {
         protected private *;
     }
-~~~
+    ~~~
 
 ### 구현 예제
 -------------------
-~~~
+
     public class MainActivity extends Activity {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final String CLIENT_ID = "YOUR CLIENT ID"; // "내 애플리케이션"에서 Client ID를 확인해서 이곳에 적어주세요.
@@ -250,7 +250,7 @@ CSR API를 사용하려면 개발하려는 애플리케이션을 네이버 개�
             msg.sendToTarget();
         }
     }
-~~~
+
 ### CSR 참고사항
 ---
 일반적으로 사용자는 음성 인식 버튼을 누르자마자 발화를 시작하려고 할 것입니다. 하지만 음성 인식을 시작하는 recognize() 메서드를 호출하면 음성 인식을 위한 메모리 할당, 마이크 자원 할당, 음성 인식 서버 접속 및 인증 등의 준비 과정을 수행해야 하기 때문에 사용자의 발화 일부가 누락될 수 있습니다. 따라서, 앱은 모든 준비가 완료된 후 사용자에게 발화해도 좋다는 정보를 전달해야 합니다. 이 방법은 다음과 같이 처리할 수 있습니다.
