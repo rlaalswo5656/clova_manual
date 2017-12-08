@@ -17,3 +17,7 @@ OSS 메뉴얼 작성 프로젝트
 <tr align="center"> <td>조원</td> <td>정준영</td> <td>20134836</td> </tr>
 <tr align="center"> <td>조원</td> <td>서대원</td> <td>20134900</td> </tr>
 </table>
+
+### 협업증명자료
+---
+![CFR_App](./img/corabo.png)
